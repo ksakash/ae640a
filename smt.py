@@ -78,6 +78,7 @@ h = s.minimize(total_c)
 print ("Whether the model is satisfiable?: ", s.check())
 print ("============ Solution ================")
 model = s.model()
+print (model)
 s = str (model)
 
 var_list = s[1:-1].split (',\n ')
@@ -106,12 +107,3 @@ def generate_plan (sol):
         f.close()
 
 generate_plan (sol)
-
-# print (X[0][4])
-# print ("model class type: ", type(model))
-# aa = s.model()
-
-# print ("============ variables ==============")
-# print (aa.decls())
-# print ("=========== total cost ==============")
-# print (aa[len(aa)-1].name(),aa[aa[len(aa)-1]])
