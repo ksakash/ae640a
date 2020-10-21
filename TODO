@@ -1,0 +1,5 @@
+1. write a script to make a plot for the plan
+2. write a script for plotting odometry to show the real time coverage in a map
+3. to plot plan for different cases, like with different no. of robots and obstacle configuration
+4. to record a video with 1 quadcopter covering a particular area and then introduce another quadcopter
+
