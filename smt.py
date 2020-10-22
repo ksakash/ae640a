@@ -67,7 +67,7 @@ for t in range(0, T):
     s.add(Or(X[1][t] != X[3][t], Y[1][t] != Y[3][t]))
     s.add(Or(X[2][t] != X[3][t], Y[2][t] != Y[3][t]))
 
-# At the end of loop, conditions that the whole grid is visited
+# full coverage condition
 obst = [(2,0), (3,0), (1,2), (3,2), (1,4), (2,4)]
 for x in range(0, 5):
     for y in range(0, 5):

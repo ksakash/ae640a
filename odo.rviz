@@ -3,7 +3,11 @@ Panels:
     Help Height: 78
     Name: Displays
     Property Tree Widget:
-      Expanded: ~
+      Expanded:
+        - /Odometry1
+        - /Odometry1/Shape1
+        - /Odometry2
+        - /Odometry2/Shape1
       Splitter Ratio: 0.5
     Tree Height: 555
   - Class: rviz/Selection
@@ -68,7 +72,7 @@ Visualization Manager:
           Value: true
         Value: true
       Enabled: true
-      Keep: 10
+      Keep: 300
       Name: Odometry
       Position Tolerance: 0.10000000149011612
       Shape:
@@ -78,10 +82,52 @@ Visualization Manager:
         Color: 255; 25; 0
         Head Length: 0.10000000149011612
         Head Radius: 0.009999999776482582
-        Shaft Length: 0.20000000298023224
-        Shaft Radius: 0.05000000074505806
+        Shaft Length: 0.10000000149011612
+        Shaft Radius: 0.10000000149011612
         Value: Arrow
-      Topic: /mavros/odometry/in
+      Topic: /uav1/mavros/odometry/in
+      Unreliable: false
+      Value: true
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /viz_marker
+      Name: MarkerArray
+      Namespaces:
+        my_namespace: true
+      Queue Size: 100
+      Value: true
+    - Angle Tolerance: 0.10000000149011612
+      Class: rviz/Odometry
+      Covariance:
+        Orientation:
+          Alpha: 0.5
+          Color: 255; 255; 127
+          Color Style: Unique
+          Frame: Local
+          Offset: 1
+          Scale: 1
+          Value: true
+        Position:
+          Alpha: 0.30000001192092896
+          Color: 204; 51; 204
+          Scale: 1
+          Value: true
+        Value: true
+      Enabled: true
+      Keep: 100
+      Name: Odometry
+      Position Tolerance: 0.10000000149011612
+      Shape:
+        Alpha: 1
+        Axes Length: 1
+        Axes Radius: 0.10000000149011612
+        Color: 0; 85; 0
+        Head Length: 0.10000000149011612
+        Head Radius: 0.10000000149011612
+        Shaft Length: 0.10000000149011612
+        Shaft Radius: 0.10000000149011612
+        Value: Arrow
+      Topic: /uav0/mavros/odometry/in
       Unreliable: false
       Value: true
   Enabled: true
@@ -112,7 +158,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 10
+      Distance: 16.638504028320312
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -127,10 +173,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.4103991687297821
+      Pitch: 1.519796371459961
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 0.6204047799110413
+      Yaw: 4.34857177734375
     Saved: ~
 Window Geometry:
   Displays:
@@ -148,5 +194,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1181
-  X: 164
-  Y: 182
+  X: 590
+  Y: 116
