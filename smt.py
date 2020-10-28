@@ -22,12 +22,12 @@ s.add(Y[2][0] == 0)
 s.add(X[3][0] == 1)
 s.add(Y[3][0] == 1)
 
-for r in range(0, 4):
-    s.add(Or(X[r][T-1] == 0, X[r][T-1] == 4))
-    s.add(Or(Y[r][T-1] == 0, Y[r][T-1] == 4))
+# for r in range(0, 4):
+#     s.add(Or(X[r][T-1] == 0, X[r][T-1] == 4))
+#     s.add(Or(Y[r][T-1] == 0, Y[r][T-1] == 4))
 
-s.add(X[0][T-1] + X[1][T-1] + X[2][T-1] + X[3][T-1] == 8)
-s.add(Y[0][T-1] + Y[1][T-1] + Y[2][T-1] + Y[3][T-1] == 8)
+# s.add(X[0][T-1] + X[1][T-1] + X[2][T-1] + X[3][T-1] == 8)
+# s.add(Y[0][T-1] + Y[1][T-1] + Y[2][T-1] + Y[3][T-1] == 8)
 
 # Obstacle avoidance
 for r in range(R):
@@ -47,15 +47,15 @@ for r in range(R):
 # Motion primitives
 for r in range(0, R):
     for t in range(T-1):
-        s.add(Implies(P[r][t] == 0, And(X[r][t+1] == X[r][t], Y[r][t+1] == Y[r][t], C[r][t] == 0.5))) # same
-        s.add(Implies(P[r][t] == 1, And(X[r][t+1] == X[r][t]+1, Y[r][t+1] == Y[r][t], C[r][t] == 1))) # right
-        s.add(Implies(P[r][t] == 2, And(X[r][t+1] == X[r][t], Y[r][t+1] == Y[r][t]+1, C[r][t] == 1))) # up
-        s.add(Implies(P[r][t] == 3, And(X[r][t+1] == X[r][t], Y[r][t+1] == Y[r][t]-1, C[r][t] == 1))) # down
-        s.add(Implies(P[r][t] == 4, And(X[r][t+1] == X[r][t]-1, Y[r][t+1] == Y[r][t], C[r][t] == 1))) # left
-        s.add(Implies(P[r][t] == 5, And(X[r][t+1] == X[r][t]+1, Y[r][t+1] == Y[r][t]+1, C[r][t] == 1.5)))
-        s.add(Implies(P[r][t] == 6, And(X[r][t+1] == X[r][t]-1, Y[r][t+1] == Y[r][t]-1, C[r][t] == 1.5)))
-        s.add(Implies(P[r][t] == 7, And(X[r][t+1] == X[r][t]-1, Y[r][t+1] == Y[r][t]+1, C[r][t] == 1.5)))
-        s.add(Implies(P[r][t] == 8, And(X[r][t+1] == X[r][t]+1, Y[r][t+1] == Y[r][t]-1, C[r][t] == 1.5)))
+        s.add(Implies(P[r][t] == 0, And(X[r][t+1] == X[r][t], Y[r][t+1] == Y[r][t], C[r][t] == 1))) # same
+        s.add(Implies(P[r][t] == 1, And(X[r][t+1] == X[r][t]+1, Y[r][t+1] == Y[r][t], C[r][t] == 2))) # right
+        s.add(Implies(P[r][t] == 2, And(X[r][t+1] == X[r][t], Y[r][t+1] == Y[r][t]+1, C[r][t] == 2))) # up
+        s.add(Implies(P[r][t] == 3, And(X[r][t+1] == X[r][t], Y[r][t+1] == Y[r][t]-1, C[r][t] == 2))) # down
+        s.add(Implies(P[r][t] == 4, And(X[r][t+1] == X[r][t]-1, Y[r][t+1] == Y[r][t], C[r][t] == 2))) # left
+        s.add(Implies(P[r][t] == 5, And(X[r][t+1] == X[r][t]+1, Y[r][t+1] == Y[r][t]+1, C[r][t] == 5)))
+        s.add(Implies(P[r][t] == 6, And(X[r][t+1] == X[r][t]-1, Y[r][t+1] == Y[r][t]-1, C[r][t] == 5)))
+        s.add(Implies(P[r][t] == 7, And(X[r][t+1] == X[r][t]-1, Y[r][t+1] == Y[r][t]+1, C[r][t] == 5)))
+        s.add(Implies(P[r][t] == 8, And(X[r][t+1] == X[r][t]+1, Y[r][t+1] == Y[r][t]-1, C[r][t] == 5)))
 
 # For any 2 robots, (x,y) at any time can not be same
 # collision AVOIDANCE
@@ -74,7 +74,11 @@ for x in range(0, 5):
         if ((x,y) not in obst):
             s.add(Or([And(X[r][t] == x, Y[r][t] == y) for r in range(0, R) for t in range (0, T)]))
 
-h = s.minimize(total_c)
+# h = s.minimize(total_c)
+for r in range (R):
+    for t in range (T):
+        s.minimize (C[r][t])
+
 print ("Whether the model is satisfiable?: ", s.check())
 print ("============ Solution ================")
 model = s.model()

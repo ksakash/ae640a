@@ -17,8 +17,8 @@ s.add(total_c == Sum(C[0] + C[1]))
 # Start Positions
 s.add(X[0][0] == 0)
 s.add(Y[0][0] == 0)
-s.add(X[1][0] == 1)
-s.add(Y[1][0] == 1)
+s.add(X[1][0] == 0)
+s.add(Y[1][0] == 4)
 # s.add(X[2][0] == 1)
 # s.add(Y[2][0] == 0)
 # s.add(X[3][0] == 1)
@@ -32,7 +32,7 @@ s.add(Y[1][0] == 1)
 # s.add(Y[0][T-1] + Y[1][T-1] + Y[2][T-1] + Y[3][T-1] == 8)
 
 s.add (And(X[0][T-1] == 4, Y[0][T-1] == 0))
-s.add (And(X[1][T-1] == 0, Y[1][T-1] == 4))
+s.add (And(X[1][T-1] == 4, Y[1][T-1] == 4))
 
 # TODO: do it with a list of obstacles
 # Obstacle avoidance
@@ -58,10 +58,10 @@ for r in range(0, R):
         s.add(Implies(P[r][t] == 2, And(X[r][t+1] == X[r][t], Y[r][t+1] == Y[r][t]+1, C[r][t] == 1))) # up
         s.add(Implies(P[r][t] == 3, And(X[r][t+1] == X[r][t], Y[r][t+1] == Y[r][t]-1, C[r][t] == 1))) # down
         s.add(Implies(P[r][t] == 4, And(X[r][t+1] == X[r][t]-1, Y[r][t+1] == Y[r][t], C[r][t] == 1))) # left
-        s.add(Implies(P[r][t] == 5, And(X[r][t+1] == X[r][t]+1, Y[r][t+1] == Y[r][t]+1, C[r][t] == 1.5)))
-        s.add(Implies(P[r][t] == 6, And(X[r][t+1] == X[r][t]-1, Y[r][t+1] == Y[r][t]-1, C[r][t] == 1.5)))
-        s.add(Implies(P[r][t] == 7, And(X[r][t+1] == X[r][t]-1, Y[r][t+1] == Y[r][t]+1, C[r][t] == 1.5)))
-        s.add(Implies(P[r][t] == 8, And(X[r][t+1] == X[r][t]+1, Y[r][t+1] == Y[r][t]-1, C[r][t] == 1.5)))
+        s.add(Implies(P[r][t] == 5, And(X[r][t+1] == X[r][t]+1, Y[r][t+1] == Y[r][t]+1, C[r][t] == 5)))
+        s.add(Implies(P[r][t] == 6, And(X[r][t+1] == X[r][t]-1, Y[r][t+1] == Y[r][t]-1, C[r][t] == 5)))
+        s.add(Implies(P[r][t] == 7, And(X[r][t+1] == X[r][t]-1, Y[r][t+1] == Y[r][t]+1, C[r][t] == 5)))
+        s.add(Implies(P[r][t] == 8, And(X[r][t+1] == X[r][t]+1, Y[r][t+1] == Y[r][t]-1, C[r][t] == 5)))
 
 # TODO: do it with lists
 # For any 2 robots, (x,y) at any time can not be same
@@ -82,6 +82,9 @@ for x in range(0, 5):
             s.add(Or([And(X[r][t] == x, Y[r][t] == y) for r in range(0, R) for t in range (0, T)]))
 
 h = s.minimize(total_c)
+for r in range (R):
+    for t in range (T):
+        s.minimize (C[r][t])
 print ("Whether the model is satisfiable?: ", s.check())
 print ("============ Solution ================")
 model = s.model()
@@ -103,7 +106,7 @@ def getval (val):
 
 sol = {}
 for v in var_list[:-1]:
-    print (v)
+    # print (v)
     [key, val] = v.split (' = ')
     sol[key] = getval (val)
 
