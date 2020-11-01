@@ -2,18 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import time
 
-# x0 = [0, 1, 2, 2, 1, 0]
-# y0 = [0, 1, 2, 3, 3, 4]
-
-# x1 = [0, 0, 0, 0, 0, 0]
-# y1 = [1, 2, 3, 2, 1, 0]
-
-# x2 = [1, 2, 3, 4, 4, 4]
-# y2 = [0, 1, 1, 2, 1, 0]
-
-# x3 = [1, 2, 3, 3, 4, 4]
-# y3 = [1, 2, 3, 4, 3, 4]
-
 def readInput (filename):
     f = open (filename, 'r')
     lines = f.readlines()

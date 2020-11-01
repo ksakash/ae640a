@@ -1,7 +1,7 @@
 from z3 import *
 
 s = Optimize()
-T = 6
+T = 5
 R = 4
 total_c = Real('total_c')
 
@@ -16,11 +16,11 @@ s.add(total_c == Sum(C[0] + C[1] + C[2] + C[3]))
 s.add(X[0][0] == 0)
 s.add(Y[0][0] == 0)
 s.add(X[1][0] == 0)
-s.add(Y[1][0] == 1)
-s.add(X[2][0] == 1)
+s.add(Y[1][0] == 4)
+s.add(X[2][0] == 4)
 s.add(Y[2][0] == 0)
-s.add(X[3][0] == 1)
-s.add(Y[3][0] == 1)
+s.add(X[3][0] == 4)
+s.add(Y[3][0] == 4)
 
 # for r in range(0, 4):
 #     s.add(Or(X[r][T-1] == 0, X[r][T-1] == 4))
@@ -88,12 +88,7 @@ s = str (model)
 var_list = s[1:-1].split (',\n ')
 
 def getval (val):
-    if (val == '1/2'):
-        return 0.5
-    elif (val == '3/2'):
-        return 1.5
-    else:
-        return int (val)
+    return int (val)
 
 sol = {}
 for v in var_list:
