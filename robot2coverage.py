@@ -1,7 +1,7 @@
 from z3 import *
 
 s = Optimize()
-T = 10
+T = 12
 R = 2
 total_c = Real('total_c')
 
@@ -17,8 +17,16 @@ s.add(total_c == Sum(C[0] + C[1]))
 # Start Positions
 s.add(X[0][0] == 0)
 s.add(Y[0][0] == 0)
+s.add(X[0][T-1] == 0)
+s.add(Y[0][T-1] == 0)
+
 s.add(X[1][0] == 1)
-s.add(Y[1][0] == 1)
+s.add(Y[1][0] == 0)
+s.add(X[1][T-1] == 1)
+s.add(Y[1][T-1] == 0)
+
+s.check ()
+
 # s.add(X[2][0] == 1)
 # s.add(Y[2][0] == 0)
 # s.add(X[3][0] == 1)
@@ -46,9 +54,13 @@ for r in range(R):
         s.add(Or(X[r][t] != 2, Y[r][t] != 4))
 
         # stay within bounds
-        s.add(And(X[r][t] < 5, X[r][t] >= 0))
-        s.add(And(Y[r][t] < 5, Y[r][t] >= 0))
-        s.add(And(P[r][t] < 9, P[r][t] >= 0))
+        s.add(And(X[r][t] <= 4, X[r][t] >= 0))
+        s.add(And(Y[r][t] <= 4, Y[r][t] >= 0))
+        s.add(And(P[r][t] <= 8, P[r][t] >= 0))
+
+        s.add (Or (((C[r][t] == 1), (C[r][t] == 2), (C[r][t] == 5))))
+
+s.check ()
 
 # Motion primitives
 for r in range(0, R):
@@ -63,6 +75,8 @@ for r in range(0, R):
         s.add(Implies(P[r][t] == 7, And(X[r][t+1] == X[r][t]-1, Y[r][t+1] == Y[r][t]+1, C[r][t] == 5)))
         s.add(Implies(P[r][t] == 8, And(X[r][t+1] == X[r][t]+1, Y[r][t+1] == Y[r][t]-1, C[r][t] == 5)))
 
+s.check ()
+
 # TODO: do it with lists
 # For any 2 robots, (x,y) at any time can not be same
 # collision AVOIDANCE
@@ -74,6 +88,8 @@ for t in range(0, T):
     # s.add(Or(X[1][t] != X[3][t], Y[1][t] != Y[3][t]))
     # s.add(Or(X[2][t] != X[3][t], Y[2][t] != Y[3][t]))
 
+s.check ()
+
 # full coverage condition
 obst = [(2,0), (3,0), (1,2), (3,2), (1,4), (2,4)]
 for x in range(0, 5):
@@ -81,35 +97,25 @@ for x in range(0, 5):
         if ((x,y) not in obst):
             s.add(Or([And(X[r][t] == x, Y[r][t] == y) for r in range(0, R) for t in range (0, T)]))
 
-# h = s.minimize(total_c)
-for r in range (R):
-    for t in range (T):
-        s.minimize (C[r][t])
+s.check ()
+
+s.minimize(total_c)
+# for r in range (R):
+#     for t in range (T):
+#         s.minimize (C[r][t])
 print ("Whether the model is satisfiable?: ", s.check())
 print ("============ Solution ================")
 model = s.model()
 print (model)
-s = str (model).split ('total_c')[0]
 
-var_list = s[1:].split (',\n ')
-
-# TODO: remove this
-def getval (val):
-    return int (val)
-
-sol = {}
-for v in var_list[:-1]:
-    [key, val] = v.split (' = ')
-    sol[key] = getval (val)
-
-def generate_plan (sol):
+def generate_plan ():
     for r in range (R):
         filename = 'roboty' + str (r) + '.plan'
         f = open (filename, 'w+')
         for t in range (T):
-            coord = str (sol[str(X[r][t])]) + " " + str (sol[str(Y[r][t])]) + " 2\n"
+            coord = str (model[X[r][t]]) + " " + str (model[Y[r][t]]) + " 2\n"
             f.write (coord)
             f.flush ()
         f.close()
 
-generate_plan (sol)
+generate_plan ()

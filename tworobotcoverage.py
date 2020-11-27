@@ -38,8 +38,8 @@ plt.xlim ((-1, 5))
 plt.pause (1)
 
 for i in range (0, len (x0), 1):
-    plt.plot (x0[i:i+2], y0[i:i+2], 'ro-')
-    plt.plot (x1[i:i+2], y1[i:i+2], 'go-')
+    plt.plot (x0[i:i+2], y0[i:i+2], 'r--')
+    plt.plot (x1[i:i+2], y1[i:i+2], 'g--')
     plt.pause (1)
 
 plt.show ()

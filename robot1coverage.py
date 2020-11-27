@@ -2,9 +2,11 @@ from z3 import *
 import time
 
 s = Optimize()
-T = 19
+T = 21
 R = 1
 total_c = Real('total_c')
+
+then = time.time()
 
 # TODO: to make the dimensions variable as well
 
@@ -12,12 +14,17 @@ X = [[Int("x_%s_%s" % (i, j)) for j in range(T)] for i in range(R)]
 Y = [[Int("y_%s_%s" % (i, j)) for j in range(T)] for i in range(R)]
 P = [[Int("p_%s_%s" % (i, j)) for j in range(T)] for i in range(R)]
 
-C = [[Real("c_%s_%s" % (i, j)) for j in range(T)] for i in range(R)]
+C = [[Int("c_%s_%s" % (i, j)) for j in range(T)] for i in range(R)]
 s.add(total_c == Sum(C[0]))
 
 # Start Positions
 s.add(X[0][0] == 0)
 s.add(Y[0][0] == 0)
+s.add(X[0][T-1] == 0)
+s.add(Y[0][T-1] == 0)
+
+s.check ()
+
 # s.add(X[1][0] == 0)
 # s.add(Y[1][0] == 1)
 # s.add(X[2][0] == 1)
@@ -46,22 +53,28 @@ for r in range(R):
         s.add(Or(X[r][t] != 2, Y[r][t] != 4))
 
         # stay within bounds
-        s.add(And(X[r][t] < 5, X[r][t] >= 0))
-        s.add(And(Y[r][t] < 5, Y[r][t] >= 0))
-        s.add(And(P[r][t] < 9, P[r][t] >= 0))
+        s.add(And(X[r][t] <= 4, X[r][t] >= 0))
+        s.add(And(Y[r][t] <= 4, Y[r][t] >= 0))
+        s.add(And(P[r][t] <= 8, P[r][t] >= 0))
+
+        s.add (Or (((C[r][t] == 1), (C[r][t] == 2), (C[r][t] == 5))))
+
+s.check ()
 
 # Motion primitives
 for r in range(0, R):
     for t in range(T-1):
         s.add(Implies(P[r][t] == 0, And(X[r][t+1] == X[r][t], Y[r][t+1] == Y[r][t], C[r][t] == 1))) # same
-        s.add(Implies(P[r][t] == 1, And(X[r][t+1] == X[r][t]+1, Y[r][t+1] == Y[r][t], C[r][t] == 1))) # right
-        s.add(Implies(P[r][t] == 2, And(X[r][t+1] == X[r][t], Y[r][t+1] == Y[r][t]+1, C[r][t] == 1))) # up
-        s.add(Implies(P[r][t] == 3, And(X[r][t+1] == X[r][t], Y[r][t+1] == Y[r][t]-1, C[r][t] == 1))) # down
-        s.add(Implies(P[r][t] == 4, And(X[r][t+1] == X[r][t]-1, Y[r][t+1] == Y[r][t], C[r][t] == 1))) # left
-        s.add(Implies(P[r][t] == 5, And(X[r][t+1] == X[r][t]+1, Y[r][t+1] == Y[r][t]+1, C[r][t] == 10)))
-        s.add(Implies(P[r][t] == 6, And(X[r][t+1] == X[r][t]-1, Y[r][t+1] == Y[r][t]-1, C[r][t] == 10)))
-        s.add(Implies(P[r][t] == 7, And(X[r][t+1] == X[r][t]-1, Y[r][t+1] == Y[r][t]+1, C[r][t] == 10)))
-        s.add(Implies(P[r][t] == 8, And(X[r][t+1] == X[r][t]+1, Y[r][t+1] == Y[r][t]-1, C[r][t] == 10)))
+        s.add(Implies(P[r][t] == 1, And(X[r][t+1] == X[r][t]+1, Y[r][t+1] == Y[r][t], C[r][t] == 2))) # right
+        s.add(Implies(P[r][t] == 2, And(X[r][t+1] == X[r][t], Y[r][t+1] == Y[r][t]+1, C[r][t] == 2))) # up
+        s.add(Implies(P[r][t] == 3, And(X[r][t+1] == X[r][t], Y[r][t+1] == Y[r][t]-1, C[r][t] == 2))) # down
+        s.add(Implies(P[r][t] == 4, And(X[r][t+1] == X[r][t]-1, Y[r][t+1] == Y[r][t], C[r][t] == 2))) # left
+        s.add(Implies(P[r][t] == 5, And(X[r][t+1] == X[r][t]+1, Y[r][t+1] == Y[r][t]+1, C[r][t] == 5)))
+        s.add(Implies(P[r][t] == 6, And(X[r][t+1] == X[r][t]-1, Y[r][t+1] == Y[r][t]-1, C[r][t] == 5)))
+        s.add(Implies(P[r][t] == 7, And(X[r][t+1] == X[r][t]-1, Y[r][t+1] == Y[r][t]+1, C[r][t] == 5)))
+        s.add(Implies(P[r][t] == 8, And(X[r][t+1] == X[r][t]+1, Y[r][t+1] == Y[r][t]-1, C[r][t] == 5)))
+
+s.check ()
 
 # TODO: do it with lists
 # For any 2 robots, (x,y) at any time can not be same
@@ -82,6 +95,8 @@ for x in range(0, 5):
         if ((x,y) not in obst):
             s.add(Or([And(X[r][t] == x, Y[r][t] == y) for r in range(0, R) for t in range (0, T)]))
 
+s.check ()
+
 # s.minimize(total_c)
 for r in range (R):
     for t in range (T):
@@ -92,35 +107,16 @@ print ("============ Solution ================")
 model = s.model()
 print (model)
 
-s = str (model).split ('total_c')[0]
+print ("time taken:", time.time() - then)
 
-var_list = s[1:].split (',\n ')
-
-# TODO: remove this
-def getval (val):
-    if (val == '1/2'):
-        return 0.5
-    elif (val == '3/2'):
-        return 1.5
-    elif (val == '5/2'):
-        return 2.5
-    else:
-        return int (val)
-
-sol = {}
-for v in var_list[:-1]:
-    # print (v)
-    [key, val] = v.split (' = ')
-    sol[key] = getval (val)
-
-def generate_plan (sol):
+def generate_plan ():
     for r in range (R):
         filename = 'robotx' + str (r) + '.plan'
         f = open (filename, 'w+')
         for t in range (T):
-            coord = str (sol[str(X[r][t])]) + " " + str (sol[str(Y[r][t])]) + " 2\n"
+            coord = str (model[X[r][t]]) + " " + str (model[Y[r][t]]) + " 2\n"
             f.write (coord)
             f.flush ()
         f.close()
 
-generate_plan (sol)
+generate_plan ()

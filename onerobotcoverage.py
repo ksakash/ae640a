@@ -27,7 +27,7 @@ plt.scatter (initialx, initialy, c=['r'])
 plt.scatter (obsx, obsy, c=['k','k','k','k','k','k'])
 plt.ylim ((-1, 5))
 plt.xlim ((-1, 5))
-plt.pause (3)
+plt.pause (1)
 
 for i in range (0, len (x0), 1):
     plt.plot (x0[i:i+2], y0[i:i+2], 'ro-')

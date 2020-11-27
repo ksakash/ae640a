@@ -36,9 +36,9 @@ plt.pause (1)
 
 for i in range (0, len (x0), 1):
     plt.plot (x0[i:i+2], y0[i:i+2], 'r--')
-    plt.plot (x1[i:i+2], y1[i:i+2], 'bo-')
-    plt.plot (x2[i:i+2], y2[i:i+2], 'go-')
-    plt.plot (x3[i:i+2], y3[i:i+2], 'yo-')
+    plt.plot (x1[i:i+2], y1[i:i+2], 'b--')
+    plt.plot (x2[i:i+2], y2[i:i+2], 'g--')
+    plt.plot (x3[i:i+2], y3[i:i+2], 'y--')
     plt.pause (1)
 
 plt.show ()
