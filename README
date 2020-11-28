@@ -1,2 +1,22 @@
 # ae640a
-contains all the code written in ae640a
+contains all the code written in ae640a project
+
+# abstract
+to develop and implement an area covering strategy using multiple UAVs
+
+# dependecies
+z3-solver, matplotlib
+
+# scripts
+robot1coverage.py: solve the problem for one quadcopter case and write the sequence of waypoints into 'robotx.plan' files
+
+robot2coverage.py: solve the problem for two quadcopter case and write the sequence of waypoints into 'roboty.plan' files for each robot
+
+smt.py: script to solve the case for 4 quadcopters and write the waypoints in 'robot.plan'
+
+plot.py: visualize the motion plan using matplotlib for 4 quadcopters case
+
+onerobotcoverage.py: visualize the motion for 2 quadcopters case
+
+tworobotcoverage.py: visualize the motion for 1 quadcopter case
+
